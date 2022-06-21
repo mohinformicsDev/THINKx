@@ -1,0 +1,212 @@
+<div class="mat-typography">
+  <form [formGroup]="sensor" (ngSubmit)="onSubmit($event)">
+    <mat-card>
+      <mat-card-title>
+        <mat-card-actions class="d-flex align-items-center">
+          <button
+            routerLink="/home/sensor"
+            mat-icon-button
+            class="example-icon"
+            aria-label="Example icon-button with menu icon"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div>
+            <span>Edit Sensor</span>
+          </div>
+        </mat-card-actions>
+      </mat-card-title>
+
+      <mat-card-content class="d-flex align-items-center flex-direction-column">
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>sensor Name</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Enter Text"
+              formControlName="name"
+              required
+              [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+            />
+            <mat-error *ngIf="f.name.hasError">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Sync Field</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Enter Text"
+              formControlName="syncfield"
+              required
+              [ngClass]="{ 'is-invalid': submitted && f.syncfield.errors }"
+            />
+            <mat-error *ngIf="f.syncfield.hasError">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+        <thinkx-image-drag-drop
+          class="margin-left-1"
+          style="width: 100%;"
+          [groupName]="imageDragDropGroup"
+          fieldLabel="Image Url"
+        ></thinkx-image-drag-drop>
+
+        <h1>Arm messages</h1>
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Disarm Message to read</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Disarm Message to read"
+              formControlName="armMessageToRead"
+              required
+            />
+            <mat-error *ngIf="f.armMessageToRead.hasError">
+              {{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Disarm Message to send</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="armMessageToSend"
+              placeholder="Disarm Message to send"
+              required
+            />
+            <mat-error *ngIf="f.armMessageToSend.hasError">
+              {{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <h1>DisArm messages</h1>
+
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>disArm Message to read</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="disArm Message to read"
+              formControlName="disArmMessageToRead"
+              required
+            />
+            <mat-error *ngIf="f.disArmMessageToRead.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Disarm Message to send</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="disArmMessageToSend"
+              placeholder="Disarm Message to send"
+              required
+            />
+            <mat-error *ngIf="f.disArmMessageToSend.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <h1>Timer Message</h1>
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Set timer message to read</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Set timer message to read"
+              formControlName="setTimerMessageToRead"
+              required
+            />
+            <mat-error *ngIf="f.setTimerMessageToRead.hasError">
+              {{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Set timer message to send</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="setTimerMessageToSend"
+              placeholder="Set timer message to send"
+              required
+            />
+            <mat-error *ngIf="f.setTimerMessageToSend.hasError">
+              {{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Get timer message to read</mat-label>
+            <input matInput type="text" placeholder="Get timer message to read" formControlName="getTimerMessageToRead"
+              required />
+            <mat-error *ngIf="f.getTimerMessageToRead.hasError">
+              {{ getErrorMessage() }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Get timer message to send</mat-label>
+            <input matInput type="text" formControlName="getTimerMessageToSend" placeholder="Get timer message to send"
+              required />
+            <mat-error *ngIf="f.getTimerMessageToSend.hasError">
+              {{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <h2 class="text-align-left" *ngIf="featureCheckboxes.length > 0">
+          Features
+        </h2>
+        <div class="d-grid features" *ngIf="featureCheckboxes.length > 0">
+          <div *ngFor="let feature of featureCheckboxes; let i = index">
+            <mat-checkbox
+              class="example-margin"
+              [checked]="feature.isChecked"
+              (change)="toggleFeatureCheckbox($event, feature.data._id)"
+              >{{ feature.data.name }}</mat-checkbox
+            >
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+
+      <mat-card-footer
+        style="padding: 10px; text-align: center; display: block"
+      >
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          Save</button>
+        &nbsp; &nbsp;
+        <button routerLink="/home/sensor" mat-raised-button type="button">
+          <mat-icon>cancel</mat-icon>
+          Cancel
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+  <!-- loader -->
+  <div
+    *ngIf="isLoading"
+    class="loader"
+    [ngClass]="{
+      new: isLoadingType === loadingOption.NEW,
+      refresh: isLoadingType === loadingOption.REFRESH
+    }"
+  >
+    <mat-progress-spinner color="primary" mode="indeterminate" diameter="80">
+    </mat-progress-spinner>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <div class="spacing-wrapper pb-3" (click)="onSelectMenu(drawer)">
+        <a routerLinkActive="active" mat-list-item routerLink="dashboard">
+          <div class="wrapper-for-display">
+            Dashboard
+            <button mat-icon-button>
+              <mat-icon>dashboard</mat-icon>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <mat-divider [vertical]="false"></mat-divider>
+
+      <div class="spacing-wrapper py-3" (click)="onSelectMenu(drawer)">
+        <a routerLinkActive="active" mat-list-item routerLink="category">
+          <div class="wrapper-for-display">
+            Category
+            <button mat-icon-button>
+              <mat-icon>category</mat-icon>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <mat-divider [vertical]="false"></mat-divider>
+
+      <div class="spacing-wrapper py-3" >
+        <a routerLinkActive="active" mat-list-item routerLink="product" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-display">
+            Product
+            <button mat-icon-button>
+              <mat-icon>card_travel</mat-icon>
+            </button>
+          </div>
+        </a>
+        <a routerLinkActive="active" mat-list-item routerLink="product/feature" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-subdisplay">
+            Product Feature
+            <button mat-icon-button>
+              <mat-icon>list_alt</mat-icon>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <mat-divider [vertical]="false"></mat-divider>
+
+      <div class="spacing-wrapper py-3">
+        <a routerLinkActive="active" mat-list-item routerLink="sensor" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-display">
+            Sensor
+            <button mat-icon-button>
+              <mat-icon>compass_calibration</mat-icon>
+            </button>
+          </div>
+        </a>
+        <a routerLinkActive="active" mat-list-item routerLink="sensor/feature" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-subdisplay">
+            Sensor Feature
+            <button mat-icon-button>
+              <mat-icon>list_alt</mat-icon>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <mat-divider [vertical]="false"></mat-divider>
+
+      <div class="spacing-wrapper pt-3">
+        <a routerLinkActive="active" mat-list-item routerLink="oem" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-display">
+            OEM
+            <button mat-icon-button>
+              <mat-icon>location_city</mat-icon>
+            </button>
+          </div>
+        </a>
+        <a routerLinkActive="active" mat-list-item routerLink="customer" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-display">
+            Customer
+            <button mat-icon-button>
+              <mat-icon>group</mat-icon>
+            </button>
+          </div>
+        </a>
+        <a routerLinkActive="active" mat-list-item routerLink="device" (click)="onSelectMenu(drawer)">
+          <div class="wrapper-for-display">
+            Device
+            <button mat-icon-button>
+              <mat-icon>devices</mat-icon>
+            </button>
+          </div>
+        </a>
+      </div>
+      <div class="spacer"></div>
+
+      <a (click)="logout()" mat-list-item>
+        <div class="wrapper-for-display">
+          Logout
+          <button mat-icon-button>
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Thinkx Technology - Admin </span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

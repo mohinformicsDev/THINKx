@@ -1,0 +1,111 @@
+<form [formGroup]="groupName">
+  <div
+    class="wrapperImg"
+    [ngStyle]="{ display: isTable ? 'inline-flex' : 'inherit' }"
+  >
+    <div
+      class="wrap d-flex align-items-center"
+      [ngStyle]="{ 'margin-right': isTable ? '.5rem' : '' }"
+    >
+      <span class="mat-body">Image : </span>
+      <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        formControlName="whichFileOption"
+        (change)="radioChange($event)"
+      >
+        <mat-radio-button
+          class="example-radio-button"
+          [value]="UploadOption.URL"
+          [checked]="fileOption === UploadOption.URL"
+        >
+          {{ UploadOption.URL }}
+        </mat-radio-button>
+        <mat-radio-button
+          class="example-radio-button"
+          [value]="UploadOption.UPLOAD"
+          [checked]="fileOption === UploadOption.UPLOAD"
+        >
+          {{ UploadOption.UPLOAD }}
+        </mat-radio-button>
+      </mat-radio-group>
+      <button mat-icon-button color="primary" matTooltip="{{imageSizePlaceholder}}">
+        <mat-icon>info</mat-icon>
+      </button>
+    </div>
+    <!-- <div class="info-image-ratio">
+      <mat-hint>{{imageSizePlaceholder}}</mat-hint>
+    </div> -->
+
+    <div *ngIf="fileOption === UploadOption.UPLOAD">
+      <div
+        *ngIf="!files.length"
+        class="col-12 rmpm dropzone"
+        (click)="uploadFile()"
+        (files)="filesDropped($event)"
+        [ngClass]="{ tableView: isTable }"
+      >
+        <div
+          class="text-wrapper"
+          [ngClass]="{ 'small-text': isTable }"
+          thinkxImageDragDirectives
+          (files)="filesDropped($event)"
+        >
+          <div class="centered">
+            Drop your file here <br />
+            OR <br />
+            Click Here To Upload
+          </div>
+        </div>
+      </div>
+
+      <!--dropped image preview-->
+      <div *ngFor="let file of files">
+        <div class="image-wrapper-close-button">
+          <button mat-flat-button class="close" (click)="clearImage()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <img
+          *ngIf="file && file?.file?.type != 'application/pdf'"
+          [src]="file.url"
+          width="100px"
+          height="100px"
+          loading="lazy"
+          onerror="this.src='../../../assets/images/placeholder.png';"
+        />
+        <div class="align-item-center">
+          <span style="font-size:100px !important" class="material-icons" *ngIf="file && file?.file?.type == 'application/pdf'">
+            picture_as_pdf
+          </span>
+          <p class="file-name" matTooltip="{{file?.file?.name}}"><b>{{file?.file?.name}}</b></p>
+        </div>
+        </div>
+      </div>
+
+      <input
+        type="file"
+        #uploadFileInput
+        style="display: none"
+        (change)="uploadFileEvent($event)"
+        [accept]="fileType"
+      />
+
+      <input type="hidden" formControlName="image" />
+    </div>
+
+    <div>
+      <mat-form-field appearance="fill" *ngIf="fileOption === UploadOption.URL">
+        <mat-label>{{ fieldLabel }}</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Enter Url"
+          formControlName="imageUrl"
+        />
+        <mat-error *ngIf="f.imageUrl.hasError">
+          {{ getErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

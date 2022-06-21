@@ -1,0 +1,178 @@
+<div style="margin: 10px">
+  <form [formGroup]="oemForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-title>
+        <mat-card-actions class="d-flex align-items-center">
+          <button routerLink="/home/oem" mat-icon-button class="example-icon"
+            aria-label="Example icon-button with menu icon">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div>
+            <span>New OEM</span>
+          </div>
+        </mat-card-actions>
+      </mat-card-title>
+
+      <mat-card-content>
+        <!-- LEFT DIV -->
+        <div class="d-grid grid-column-2">
+          <div class="object-1">
+            <mat-form-field>
+              <mat-label>OEM Name</mat-label>
+              <input matInput type="text" formControlName="oemName" />
+              <mat-error *ngIf="f.oemName.hasError">
+                {{ getErrorMessage() }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>OEM ID</mat-label>
+              <input matInput type="text" formControlName="oemId" />
+              <mat-error *ngIf="f.oemId.hasError">
+                {{ getErrorMessage() }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Bug report email : </mat-label>
+              <input matInput type="email" formControlName="bugReportEmail" />
+              <mat-error *ngIf="f.bugReportEmail.hasError">
+                {{ getErrorMessage() }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- image Drag and drop complete with option Start here -->
+            <thinkx-multiple-image-drag-drop class="margin-left-1" [groupName]="userAgreementImageDragDrop"
+              imageSizePlaceholder="Images with 720x1080 resolution would look good on mobile, PDF with size 2MB would be good."
+              fieldLabel="End User Agreement"></thinkx-multiple-image-drag-drop>
+
+            <thinkx-multiple-image-drag-drop class="margin-left-1" [groupName]="productProfileImageDragDrop"
+              imageSizePlaceholder="Images with 720x1080 resolution would look good on mobile, PDF with size 2MB would be good."
+              fieldLabel="Product Profile"></thinkx-multiple-image-drag-drop>
+
+            <thinkx-multiple-image-drag-drop class="margin-left-1" [groupName]="companyProfileImageDragDrop"
+              imageSizePlaceholder="Images with 720x1080 resolution would look good on mobile, PDF with size 2MB would be good."
+              fieldLabel="Company Profile"></thinkx-multiple-image-drag-drop>
+
+            <!-- <thinkx-multiple-image-drag-drop
+              class="margin-left-1"
+              [groupName]="userManualLinkImageDragDrop"
+              fieldLabel="User Manual Link"
+            ></thinkx-multiple-image-drag-drop> -->
+            <!-- image Drag and drop complete with option end here -->
+          </div>
+
+          <div class="object-2">
+            <div class="oem-logo">
+              <div>
+                <h1>
+                  Upload oem logo
+                </h1>
+                <thinkx-image-drag-drop class="margin-left-1"
+                  imageSizePlaceholder="Images with 100x100 resolution would look good on mobile"
+                  [groupName]="oemLogoDragDropGroup" fieldLabel="Oem Logo">
+                </thinkx-image-drag-drop>
+              </div>
+              <!-- <button type="button" mat-raised-button color="primary" (click)="oemLogo.click()"
+                *ngIf="oemLogoFile.length === 0">
+                <mat-icon>
+                  upload_file
+                </mat-icon>
+                Upload OEM LOGO
+              </button>
+
+              <div *ngFor="let file of oemLogoFile">
+                <div class="image-wrapper-close-button">
+                  <button mat-flat-button class="close" (click)="clearImage('oem-logo')">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <img *ngIf="file" [src]="file" width="100px" height="100px" loading="lazy"
+                    onerror="this.src='../../../../assets/images/placeholder.png';" />
+                </div>
+              </div>
+              <input hidden type="file" (click)="oemLogo.value = ''" value=""
+                (change)="uploadFileEvent($event, 'oem-logo')" #oemLogo /> -->
+            </div>
+          </div>
+          <div class="column-2 object-4">
+            <h1>
+              Upload marketing images
+            </h1>
+            <!-- <div class="upload-marketing"> -->
+            <!-- </div> -->
+            <thinkx-multiple-image-drag-drop class="margin-left-1" [groupName]="marketingImageLinkImageDragDrop"
+              imageSizePlaceholder="Images with 720x1080 resolution would look good on mobile, PDF with size 2MB would be good."
+              fieldLabel="Marketing Images"></thinkx-multiple-image-drag-drop>
+            <!-- <div *ngFor="let file of marketingFiles; let index = index">
+                <div class="image-wrapper-close-button">
+                  <button mat-flat-button class="close" (click)="clearImage('upload-marketing', index)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <img *ngIf="file" [src]="file" width="100px" height="100px" loading="lazy"
+                    onerror="this.src='../../../../assets/images/placeholder.png';" />
+                </div>
+              </div>
+              <input hidden type="file" (click)="uploadMarketing.value = ''" value=""
+                (change)="uploadFileEvent($event, 'upload-marketing')" #uploadMarketing multiple />
+            </div>
+            <div class="upload-marketing-add"> -->
+            <!-- <button mat-raised-button type="button" color="primary" (click)="uploadMarketing.click()">
+                <mat-icon>add</mat-icon>
+                Add Images
+              </button> -->
+            <!-- </div> -->
+          </div>
+          <div class="column-2 object-3">
+            <div>
+              <div class="mat-h1 mat-headline">Category</div>
+              <thinkx-add-oem-mat-table [data]="categoryData" [columns]="categoryColumns"
+                (selectedRowChange)="selectRowChangedHandler($event)" [type]="addOemTableType.CATEGORY"
+                [isEdit]="false"></thinkx-add-oem-mat-table>
+            </div>
+
+            <hr style="margin: 2rem 0" class="hr" />
+
+            <div>
+              <div class="mat-h1 mat-headline">Product</div>
+              <thinkx-add-oem-mat-table [data]="productData" [columns]="productColumns"
+                (selectedRowChange)="selectRowChangedHandler($event)" [type]="addOemTableType.PRODUCT" [isEdit]="false">
+              </thinkx-add-oem-mat-table>
+            </div>
+
+            <hr style="margin: 2rem 0" class="hr" />
+
+            <div>
+              <div class="mat-h1 mat-headline">Sensor</div>
+              <thinkx-add-oem-mat-table [data]="sensorData" [columns]="sensorColumns"
+                (selectedRowChange)="selectRowChangedHandler($event)" [type]="addOemTableType.SENSOR" [isEdit]="false">
+              </thinkx-add-oem-mat-table>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin: 1rem 0 1rem 1rem">
+          <mat-label>Status : </mat-label>
+          <mat-slide-toggle formControlName="status"></mat-slide-toggle>
+        </div>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-footer style="padding: 10px; text-align: center; display: block">
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          Save
+        </button>
+        &nbsp; &nbsp;
+        <button mat-raised-button type="button" routerLink="/home/oem">
+          <mat-icon>cancel</mat-icon>
+          Cancel
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+  <div *ngIf="isLoading" class="loader">
+    <mat-progress-spinner color="primary" mode="indeterminate" diameter="80">
+    </mat-progress-spinner>
+  </div>
+</div>

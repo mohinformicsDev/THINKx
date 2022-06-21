@@ -1,0 +1,119 @@
+<form [formGroup]="groupName">
+    <div
+      class="wrapper-image"
+      [ngStyle]="{ display: isTable ? 'inline-flex' : 'inherit' }"
+    >
+      <div
+        class="wrap d-flex align-items-center"
+        [ngStyle]="{ 'margin-right': isTable ? '.5rem' : '' }"
+      >
+        <span class="mat-body">Image/PDF : </span>
+        <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          formControlName="whichFileOption"
+          (change)="radioChange($event)"
+        >
+          <mat-radio-button
+            class="example-radio-button"
+            [value]="UploadOption.URL"
+            [checked]="fileOption === UploadOption.URL"
+          >
+            {{ UploadOption.URL }}
+          </mat-radio-button>
+          <mat-radio-button
+            class="example-radio-button"
+            [value]="UploadOption.UPLOAD"
+            [checked]="fileOption === UploadOption.UPLOAD"
+          >
+            {{ UploadOption.UPLOAD }}
+          </mat-radio-button>
+        </mat-radio-group>
+        <button mat-icon-button color="primary" matTooltip="{{imageSizePlaceholder}}">
+          <mat-icon>info</mat-icon>
+        </button>
+        <button class="add-button-margin" type="button" *ngIf="fileOption === UploadOption.URL" mat-flat-button (click)="addImageUrlField()" color="primary"><mat-icon>add</mat-icon>Add More</button>
+      </div>
+  
+      <div *ngIf="fileOption === UploadOption.UPLOAD">
+        <div
+          class="col-12 rmpm dropzone"
+          (click)="uploadFile()"
+          (files)="filesDropped($event)"
+          [ngClass]="{ tableView: isTable }"
+        >
+          <div
+            class="text-wrapper"
+            [ngClass]="{ 'small-text': isTable }"
+            thinkxImageDragDirectives
+            (files)="filesDropped($event)"
+          >
+            <div class="centered">
+              Drop your file here <br />
+              OR <br />
+              Click Here To Upload
+            </div>
+          </div>
+        </div>
+  
+        <!--dropped image preview-->
+        <div class="d-flex">
+            <div *ngFor="let file of files; let i = index">
+                <div class="image-wrapper-close-button">
+                  <button mat-flat-button class="close" (click)="clearImage(i)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <img
+                    *ngIf="file && file?.file?.type != 'application/pdf'"
+                    [src]="file.url"
+                    width="100px"
+                    height="100px"
+                    loading="lazy"
+                    onerror="this.src='../../../assets/images/placeholder.png';"
+                  />
+                  <div class="align-item-center">
+                    <span style="font-size:100px !important" class="material-icons" *ngIf="file && file?.file?.type == 'application/pdf'">
+                      picture_as_pdf
+                    </span>
+                    <p class="file-name" matTooltip="{{file?.file?.name}}"><b>{{file?.file?.name}}</b></p>
+                  </div>
+                </div>
+              </div>
+        </div>
+  
+        <input
+          type="file"
+          #uploadFileInput
+          style="display: none"
+          multiple
+          (change)="uploadFileEvent($event)"
+          accept="image/*,.pdf"
+        />
+  
+        <input type="hidden" formControlName="image" />
+      </div>
+  
+      <div *ngIf="fileOption === UploadOption.URL">
+        <ng-container formArrayName="imageUrl">
+            <div class="align-icon" *ngFor="let imageField of imageUrlsField().controls; let i=index">
+                <mat-form-field appearance="fill">
+                    <mat-label>{{ fieldLabel }}</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Enter Url"
+                      [formControlName]="i"
+                    />
+                    <mat-error *ngIf="imageField.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                </mat-form-field>
+                <button mat-flat-button class="close mat-icon" (click)="removeImageUrlField(i)" *ngIf="i != 0">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </ng-container>
+      </div>
+    </div>
+  </form>
+  

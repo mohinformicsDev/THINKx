@@ -1,0 +1,68 @@
+<div class="grid-container">
+  <div class="wrapper">
+    <div class="form mat-elevation-z2">
+      <div class="text-center"><img src="../../../assets/images/logo.png" alt="Thinkx Technology"/></div>
+      <form [formGroup]="login" (ngSubmit)="onSubmit()">
+        <p>
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <span matPrefix mat-icon-button> <mat-icon>email</mat-icon></span>
+
+            <input
+              matInput
+              type="email"
+              placeholder="Enter Email"
+              formControlName="loginEmail"
+              required
+              [ngClass]="{ 'is-invalid': submitted && f.loginEmail.errors }"
+            />
+            <mat-error *ngIf="f.loginEmail.hasError('required')">
+              This Field is <b>Required</b>
+            </mat-error>
+            <mat-error *ngIf="f.loginEmail.hasError('email')">
+              Enter valid <b>Email</b>
+            </mat-error>
+          </mat-form-field>
+        </p>
+
+        <p>
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <span matPrefix mat-icon-button> <mat-icon>lock</mat-icon></span>
+            <input
+              matInput
+              type="password"
+              placeholder="Enter Email"
+              formControlName="loginPassword"
+              required
+              [ngClass]="{
+                'is-invalid': submitted && f.loginPassword.errors
+              }"
+            />
+            <mat-error *ngIf="f.loginPassword.hasError('required')">
+              This Field is <b>Required</b>
+            </mat-error>
+            <mat-error *ngIf="f.loginPassword.hasError('email')">
+              Enter valid <b>Email</b>
+            </mat-error>
+          </mat-form-field>
+        </p>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="center button"
+          [disabled]="isLoginProcessing"
+        >
+          <span *ngIf="!isLoginProcessing">Login</span>
+          <mat-spinner
+            color="accent"
+            diameter="20"
+            *ngIf="isLoginProcessing"
+          ></mat-spinner>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

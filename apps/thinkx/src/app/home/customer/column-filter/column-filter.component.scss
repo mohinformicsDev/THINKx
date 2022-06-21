@@ -1,0 +1,52 @@
+.w-100 {
+  width: 100%;
+}
+
+.custom-div-for-expand {
+  width: 85%;
+  flex-wrap: wrap;
+  margin-left: 2.5rem;
+  gap: 1rem;
+}
+
+.menu-title {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.px {
+  padding-inline: 1rem;
+}
+.mx {
+  margin-inline: 2rem;
+}
+
+.mt {
+  margin-top: 1rem;
+}
+.mb {
+  margin-bottom: 1rem;
+}
+.ml {
+  margin-left: 1rem;
+}
+.mr {
+  margin-right: 1rem;
+}
+
+.py {
+  padding-block: 1rem;
+}
+
+.list-style-none {
+  list-style: none;
+  padding: 0;
+}
+
+.clear-column-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  margin-bottom: 0.5rem;
+}

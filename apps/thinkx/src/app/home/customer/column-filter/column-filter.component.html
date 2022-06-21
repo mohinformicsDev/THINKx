@@ -1,0 +1,41 @@
+<div class="menu-title" mat-filter-item>Filter For {{ columnName }}</div>
+<mat-divider></mat-divider>
+<div class="px mt" mat-filter-item>
+  <mat-form-field appearance="fill">
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      placeholder="Search"
+      [(ngModel)]="searchValue"
+      (ngModelChange)="applyFilter()"
+    />
+  </mat-form-field>
+</div>
+<div class="px" mat-filter-item>
+  <ul class="list-style-none">
+    <li *ngIf="searchValue.length <= 0">
+      <mat-checkbox
+        color="primary"
+        [disabled]="valueDisplay.length <= 0"
+        (click)="selectAll()"
+        [checked]="allValue"
+        [indeterminate]="isAllSelect()"
+      >
+        Select All
+      </mat-checkbox>
+    </li>
+    <li *ngFor="let data of valueDisplay">
+      <mat-checkbox
+        color="primary"
+        [checked]="data.isChecked"
+        (click)="changeColumnValue(data)"
+      >
+        {{ data.value }}
+      </mat-checkbox>
+    </li>
+  </ul>
+</div>
+<mat-divider></mat-divider>
+<div class="clear-column-button" mat-filter-item (click)="clearSelection()">
+  <button mat-stroked-button color="primary">RESET</button>
+</div>

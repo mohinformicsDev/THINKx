@@ -1,0 +1,154 @@
+<mat-dialog-content class="mat-typography">
+  <h2 mat-dialog-title>Add device</h2>
+
+  <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Device Name</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Type device name "
+        formControlName="name"
+        required
+        [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+      />
+      <mat-error *ngIf="f.name.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Device Id</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Type device Ids "
+        formControlName="deviceId"
+        required
+        [ngClass]="{ 'is-invalid': submitted && f.deviceId.errors }"
+      />
+      <mat-error *ngIf="f.deviceId.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Warranty (In Days)</mat-label>
+      <input
+        matInput
+        type="number"
+        placeholder="Type warranty Days Id "
+        formControlName="warrantyDays"
+        required
+        min="1"
+        [ngClass]="{ 'is-invalid': submitted && f.warrantyDays.errors }"
+      />
+      <mat-error *ngIf="f.warrantyDays.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Device Password</mat-label>
+      <input
+        matInput
+        [type]="showPassword ? 'password' : 'text'"
+        placeholder="Type device password "
+        formControlName="devicePassword"
+        required
+        [ngClass]="{ 'is-invalid': submitted && f.devicePassword.errors }"
+      />
+      <mat-icon matSuffix (click)="showPassword = !showPassword">
+        {{ showPassword ? 'visibility_off' : 'visibility' }}
+      </mat-icon>
+      <mat-error *ngIf="f.devicePassword.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Manufacture Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker1"
+        formControlName="manufactureDate"
+        required
+        [ngClass]="{
+          'is-invalid': submitted && f.manufactureDate.errors
+        }"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+      <mat-error *ngIf="f.manufactureDate.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Sold To</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Sold To"
+        formControlName="soldTo"
+        required
+        [ngClass]="{
+          'is-invalid': submitted && f.soldTo.errors
+        }"
+      />
+      <mat-error *ngIf="f.soldTo.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Product Type</mat-label>
+
+      <mat-select formControlName="productType">
+        <mat-option *ngFor="let option of options" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="f.productType.hasError('required')"
+        >Please choose an Product Type</mat-error
+      >
+    </mat-form-field>
+
+    <div class="wrapper toggle" style="margin-bottom: 10px; margin-top: 10px">
+      <span>
+        <span>Status : </span>
+        <mat-slide-toggle (change)="status()" formControlName="status"></mat-slide-toggle>
+      </span>
+      <span>
+        <span>Active : </span>
+        <mat-slide-toggle (change)="active()" formControlName="active"></mat-slide-toggle>
+      </span>
+    </div>
+
+    <button
+      #submit
+      mat-raised-button
+      color="primary"
+      type="submit"
+      style="display: none"
+    >
+      Submit
+    </button>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="wrapper d-flex align-items-center justify-content-space-between">
+    <button
+      #submit
+      mat-raised-button
+      color="primary"
+      (click)="onSubmitButton()"
+    >
+      <mat-icon>save</mat-icon>
+      Submit
+    </button>
+    <button mat-button mat-dialog-close>
+      <mat-icon>cancel</mat-icon>
+      Discard</button>
+  </div>
+</mat-dialog-actions>

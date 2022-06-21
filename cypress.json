@@ -1,0 +1,4 @@
+{
+  "integrationFolder": "./apps/thinkx",
+  "testFiles": ["**/*.spec.ts"]
+}

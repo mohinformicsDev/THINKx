@@ -1,0 +1,251 @@
+<div class="grid-container">
+  <mat-card
+    style="
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+    "
+  >
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+      (click)="addCategoryDialog()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+    <mat-divider
+      [vertical]="true"
+      style="height: 2rem; margin-inline: 1rem"
+    ></mat-divider>
+
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+      [ngClass]="{
+        refreshAnimation: isLoading && isLoadingType === loadingOption.REFRESH
+      }"
+      (click)="refresh()"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+
+    <span class="example-spacer"></span>
+
+    <div class="input-size">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Ex name, id"
+          #input
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card>
+
+  <div
+    class="rounded mat-elevation-z2"
+    style="margin: 10px 0; position: relative"
+  >
+    <table
+      mat-table
+      class="full-width-table"
+      matSort
+      aria-label="Elements"
+      multiTemplateDataRows
+    >
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef style="width: 30ch">Sr no</th>
+        <td mat-cell *matCellDef="let row; let i = dataIndex">
+          {{ i + 1 + paginator.pageSize * paginator.pageIndex }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef>Image</th>
+        <td mat-cell *matCellDef="let row" style="cursor: pointer">
+          <div
+            *ngIf="row.imageUrl"
+            class="wrapper-image"
+            (click)="clickImage($event, row.imageUrl)"
+          >
+            <img
+              src="{{ row.imageUrl }}"
+              alt="{{ row.name }} Image"
+              loading="lazy"
+              onerror="this.src='../../../assets/images/placeholder.png';"
+            />
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <form
+            class="w-100"
+            [formGroup]="categoryForm"
+            (ngSubmit)="onSubmit()"
+          >
+            <div
+              class="example-element-detail"
+              [@detailExpand]="
+                element == expandedElement ? 'expanded' : 'collapsed'
+              "
+            >
+              <div class="example-element-diagram">
+                <input
+                  type="hidden"
+                  [value]="element._id"
+                  formControlName="_id"
+                />
+                <mat-form-field style="margin-left: 2.5rem">
+                  <mat-label>Category name</mat-label>
+                  <input
+                    [value]="element.name"
+                    matInput
+                    formControlName="name"
+                    placeholder="Ex name, id"
+                    #input
+                  />
+                </mat-form-field>
+                <!-- image Drag and drop complete with option Start here -->
+                <thinkx-image-drag-drop
+                  class="margin-left-1"
+                  [groupName]="imageDragDropGroup"
+                  fieldLabel="Image Url"
+                  [isTable]="true"
+                ></thinkx-image-drag-drop>
+                <!-- image Drag and drop complete with option end here -->
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="margin-left-1"
+                  type="submit"
+                >
+                  <mat-icon> save </mat-icon>
+                  Save
+                </button>
+                <div class="wrapper">
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteConfirmationDialog()"
+                    type="button"
+                  >
+                    <mat-icon> delete </mat-icon>
+                  </button>
+                  <mat-divider
+                    [vertical]="true"
+                    style="height: 2rem; margin-inline: 1rem"
+                  ></mat-divider>
+                  <button
+                    mat-icon-button
+                    (click)="closeButtonExpanded()"
+                    type="button"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th
+          class="overflow-ellipsis"
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+        >
+          Name
+        </th>
+        <td class="overflow-ellipsis" mat-cell *matCellDef="let row">
+          {{ row.name }}
+        </td>
+      </ng-container>
+
+      <!-- Expand Arrow Column -->
+      <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button style="float: right">
+            <mat-icon *ngIf="expandedElement !== row"
+              >keyboard_arrow_up</mat-icon
+            >
+            <mat-icon *ngIf="expandedElement === row"
+              >keyboard_arrow_down</mat-icon
+            >
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: displayedColumns"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="
+          rowSelected(element);
+          expandedElement = expandedElement === element ? null : element
+        "
+      ></tr>
+
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']; let i = index"
+        class="example-detail-row"
+      ></tr>
+    </table>
+
+    <!-- no data found div -->
+    <table>
+      <tr *ngIf="!dataSource.data.length">
+        <td
+          style="text-align: center; padding: 1rem"
+          mat-card-title
+          [attr.colspan]="displayedColumns.length"
+        >
+          No Records Found!
+        </td>
+      </tr>
+    </table>
+
+    <!-- loader -->
+    <div
+      *ngIf="isLoading"
+      class="loader"
+      [ngClass]="{
+        new: isLoadingType === loadingOption.NEW,
+        refresh: isLoadingType === loadingOption.REFRESH
+      }"
+    >
+      <mat-progress-spinner color="primary" mode="indeterminate" diameter="80">
+      </mat-progress-spinner>
+    </div>
+
+    <mat-paginator
+      #paginator
+      [hidden]="!dataSource.data.length"
+      [length]="dataSource?.data?.length"
+      [pageIndex]="0"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20]"
+    >
+    </mat-paginator>
+  </div>
+</div>

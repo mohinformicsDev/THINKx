@@ -1,0 +1,68 @@
+<mat-dialog-content class="mat-typography">
+  <h2 mat-dialog-title>Upload Excel/Csv File Data</h2>
+  <div class="table valid" *ngIf="validData.length > 0">
+    <h1 class="mat-card-title">Valid Data</h1>
+    <table>
+      <tr>
+        <th>name</th>
+        <th>device id</th>
+        <th>warrantyEndDate</th>
+        <th>devicePassword</th>
+        <th>manufactureDate</th>
+        <th>status</th>
+        <th>active</th>
+        <th>soldTo</th>
+        <th>productType</th>
+      </tr>
+      <tr *ngFor="let data of validData; let i = index">
+        <td>{{ data.name }}</td>
+        <td>{{ data.deviceId }}</td>
+        <td>{{ data.enrollmentDate != null ? convertDaysToDate(data.enrollmentDate, data.warrantyDays) : '-' }}</td>
+        <td>{{ data.devicePassword }}</td>
+        <td>{{ data.manufactureDate }}</td>
+        <td>{{ data.status }}</td>
+        <td>{{ data.active }}</td>
+        <td>{{ data.soldTo }}</td>
+        <td>{{ data.productType }}</td>
+      </tr>
+    </table>
+  </div>
+  <mat-divider class="my-1" *ngIf="validData.length > 0"></mat-divider>
+  <div class="table invalid" *ngIf="invalidData.length > 0">
+    <h1 class="mat-card-title">Invalid Data</h1>
+    <table>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>deviceId</th>
+        <th>warrantyEndDate</th>
+        <th>devicePassword</th>
+        <th>manufactureDate</th>
+        <th>status</th>
+        <th>active</th>
+        <th>soldTo</th>
+        <th>productType</th>
+      </tr>
+      <tr *ngFor="let data of invalidData; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.deviceId }}</td>
+        <td>{{ data.enrollmentDate != null ? convertDaysToDate(data.enrollmentDate, data.warrantyDays) : '-' }}</td>
+        <td>{{ data.devicePassword }}</td>
+        <td>{{ data.manufactureDate }}</td>
+        <td>{{ data.status }}</td>
+        <td>{{ data.active }}</td>
+        <td>{{ data.soldTo }}</td>
+        <td>{{ data.productType }}</td>
+      </tr>
+    </table>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="wrapper-dialog-action">
+    <button #submit mat-raised-button color="primary" (click)="upload()">
+      Submit
+    </button>
+    <button mat-button [mat-dialog-close]="false">Discard</button>
+  </div>
+</mat-dialog-actions>

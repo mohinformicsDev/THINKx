@@ -1,0 +1,52 @@
+<mat-dialog-content class="mat-typography">
+  <h2 mat-dialog-title class="text-center">Add New Category</h2>
+
+  <form [formGroup]="category" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Category Name</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Enter Text"
+        formControlName="name"
+        required
+        [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+      />
+      <mat-error *ngIf="f.name.hasError">
+        {{ getErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <thinkx-image-drag-drop
+      class="margin-left-1"
+      [groupName]="imageDragDropGroup"
+      fieldLabel="Image Url"
+      thinkxImageDragDirectives
+    >
+    </thinkx-image-drag-drop>
+
+    <button
+      #submit
+      mat-raised-button
+      color="primary"
+      type="submit"
+      style="display: none"
+    >
+      Submit
+    </button>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="wrapper d-flex align-items-center justify-content-space-between">
+    <button
+      #submit
+      mat-raised-button
+      color="primary"
+      (click)="onSubmitButton()"
+    >
+    <mat-icon> save </mat-icon>
+      Submit
+    </button>
+    <button mat-button [mat-dialog-close]="false"><mat-icon> cancel </mat-icon>Discard</button>
+  </div>
+</mat-dialog-actions>

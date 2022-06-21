@@ -1,0 +1,193 @@
+<div class="mat-typography">
+  <form [formGroup]="addSensorFeatureForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-title>
+        <mat-card-actions class="d-flex align-items-center">
+          <button
+            routerLink="/home/sensor/feature"
+            mat-icon-button
+            class="example-icon"
+            aria-label="Example icon-button with menu icon"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div>
+            <span>Add Sensor Feature</span>
+          </div>
+        </mat-card-actions>
+      </mat-card-title>
+
+      <mat-card-content>
+        <div class="d-grid">
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="name"
+              placeholder="Enter name"
+              [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+            />
+            <mat-error *ngIf="f.name.hasError"
+              >{{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Sync Field</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="syncfield"
+              placeholder="Enter text"
+              [ngClass]="{ 'is-invalid': submitted && f.syncfield.errors }"
+            />
+            <mat-error *ngIf="f.syncfield.hasError"
+              >{{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Feature Type</mat-label>
+            <mat-select formControlName="featureType" (selectionChange)="selectionChange($event.value)">
+              <mat-option *ngFor="let option of options" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="f.featureType.hasError">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="d-grid">
+          <span class="slide-toggle">
+            <mat-label>Editable:&nbsp;&nbsp;</mat-label>
+            <mat-slide-toggle formControlName="isEditable"></mat-slide-toggle>
+          </span>
+          <span class="slide-toggle">
+            <mat-label>Emergency Feature:&nbsp;&nbsp;</mat-label>
+            <mat-slide-toggle formControlName="isEmergencyFeature"></mat-slide-toggle>
+          </span>
+        </div>
+        <div class="table">
+          <h1 class="mat-card-title">Add Message</h1>
+          <form
+            [formGroup]="messageGroupForm"
+            class="d-flex flex-direction-column"
+          >
+            <table>
+              <tr>
+                <th><h1 class="mat-card-title">Property</h1></th>
+                <th><h1 class="mat-card-title">Value</h1></th>
+              </tr>
+              <tr
+                formArrayName="items"
+                *ngFor="let itemGroup of items.controls; let i = index"
+              >
+                <td>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Property</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      [formControl]="getControlProperty(i)"
+                      placeholder="Enter Property"
+                      [ngClass]="{
+                        'is-invalid': submitted && getControlProperty(i).errors
+                      }"
+                      required
+                    />
+                    <mat-error *ngIf="getControlProperty(i).hasError"
+                      >{{ getErrorMessage() }}
+                    </mat-error>
+                    <mat-hint *ngIf="getControlProperty(i).value.length > 0">e.g. {{getControlProperty(i).value.toString().replace("$","55")}}</mat-hint>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Actions to perform</mat-label>
+                    <mat-select [formControl]="getControlValue(i)">
+                      <mat-option
+                        *ngFor="let action of actions"
+                        [value]="action.value"
+                        >{{ action.name }}</mat-option
+                      >
+                    </mat-select>
+                    <mat-error *ngIf="getControlValue(i).hasError"
+                      >{{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="button"
+                    (click)="addItem()"
+                  >
+                  <mat-icon>add</mat-icon>
+                    Add Message
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </mat-card-content>
+
+      <!--- toggle + drop down value  --->
+
+      <div class="table" *ngIf="enableDropDownValue">
+        <h1 class="mat-card-title">Dropdown value</h1>
+          <table>
+            <tr>
+              <td>
+                <span class="slide-toggle">
+                  <mat-label>Has Value:&nbsp;&nbsp;</mat-label>
+                  <mat-slide-toggle (change)="toggleDropdownHasValue()" formControlName="hasValue">
+                  </mat-slide-toggle>
+                </span>
+              </td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <mat-label>Dropdown Value</mat-label>
+                  <input matInput
+                    type="text"
+                    formControlName="dropDownValue"
+                    placeholder="Enter dropdown value"
+                    [ngClass]="{
+                      'is-invalid': submitted && f.dropDownValue.errors
+                    }"
+                    [readonly]="!hasValue" />
+                  <mat-error *nfIf="f.dropDownValue.hasError">
+                    {{ getErrorMessage() }}
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+          </table>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-footer
+        style="padding: 10px; text-align: center; display: block"
+      >
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
+          Save</button>
+        &nbsp; &nbsp;
+        <button
+          routerLink="/home/sensor/feature"
+          mat-raised-button
+          type="button"
+        >
+          <mat-icon>cancel</mat-icon>
+          Cancel
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+</div>

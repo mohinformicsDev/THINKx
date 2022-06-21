@@ -1,0 +1,431 @@
+<div class="mat-typography">
+  <form [formGroup]="product" (ngSubmit)="onSubmit($event)">
+    <mat-card>
+      <mat-card-title>
+        <mat-card-actions class="d-flex align-items-center">
+          <button
+            routerLink="/home/product"
+            mat-icon-button
+            class="example-icon"
+            aria-label="Example icon-button with menu icon"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div>
+            <span>Add Product</span>
+          </div>
+        </mat-card-actions>
+      </mat-card-title>
+
+      <mat-card-content class="d-flex align-items-center flex-direction-column">
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>product Name</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Enter Text"
+              formControlName="name"
+              required
+              [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+            />
+            <mat-error *ngIf="f.name.hasError">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Number of User</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="Enter Number of User"
+              formControlName="numberOfUser"
+              min="0"
+              required
+              [ngClass]="{ 'is-invalid': submitted && f.numberOfUser.errors }"
+            />
+            <mat-error *ngIf="f.numberOfUser.hasError">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Select Category</mat-label>
+
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let option of options" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="f.category.hasError">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <h1>Messages to read for control</h1>
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Arm Message to read</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Arm Message to read"
+              formControlName="armMessageToRead"
+              required
+            />
+            <mat-error *ngIf="f.armMessageToRead.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Disarm Message to read</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="disArmMessageToRead"
+              placeholder="Disarm Message to read"
+              required
+            />
+            <mat-error *ngIf="f.disArmMessageToRead.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Alert on message read</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Alert on message read"
+              formControlName="sirenOnMessageToRead"
+              required
+            />
+            <mat-error *ngIf="f.sirenOnMessageToRead.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Alert off message read</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Alert off message read"
+              formControlName="sirenOffMessageToRead"
+              required
+            />
+            <mat-error *ngIf="f.sirenOffMessageToRead.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <h1>Messages to send for control</h1>
+
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Arm Message to send</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Arm Message to send"
+              formControlName="armMessageToSend"
+              required
+            />
+            <mat-error *ngIf="f.armMessageToSend.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Disarm Message to send</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="disArmMessageToSend"
+              placeholder="Disarm Message to send"
+              required
+            />
+            <mat-error *ngIf="f.disArmMessageToSend.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Alert on message to send</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Alert on message to send"
+              formControlName="sirenOnMessageToSend"
+              required
+            />
+            <mat-error *ngIf="f.sirenOnMessageToSend.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Alert off message send</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Alert off message to send"
+              formControlName="sirenOffMessageToSend"
+              required
+            />
+            <mat-error *ngIf="f.sirenOffMessageToSend.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <h1>Sync field</h1>
+
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Arm sync</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Arm Sync Field"
+              formControlName="armSync"
+              required
+            />
+            <mat-error *ngIf="f.armSync.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Disarm sync</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="disArmSync"
+              placeholder="Disarm sync field"
+              required
+            />
+            <mat-error *ngIf="f.disArmSync.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="d-grid flow-column">
+          <mat-form-field appearance="fill">
+            <mat-label>Lock sync field</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Lock sync field"
+              formControlName="lockSync"
+              required
+            />
+            <mat-error *ngIf="f.lockSync.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Unlock sync field</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Unlock sync field"
+              formControlName="unlockSync"
+              required
+            />
+            <mat-error *ngIf="f.unlockSync.hasError">
+              {{ getErrorMessage() }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <h1>Highlight Images </h1>
+
+        <div class="d-grid flow-column">
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('armedHighlightImage')"
+            fieldLabel="Armed Highlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('disArmedHighlightImage')"
+            fieldLabel="Disarmed Highlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+        </div>
+        
+        <div class="d-grid flow-column">
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('alertOnHighlightImage')"
+            fieldLabel="Alert On Highlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('alertOffHighlightImage')"
+            fieldLabel="Alert Off Highlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+        </div>
+
+        <h1>Unhighlighted Images </h1>
+
+        <div class="d-grid flow-column">
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('armedUnhighlightImage')"
+            fieldLabel="Armed Unhighlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('disArmedUnhighlightImage')"
+            fieldLabel="Disarmed Unhighlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+        </div>
+        
+        <div class="d-grid flow-column">
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('alertOnUnhighlightImage')"
+            fieldLabel="Alert On Unhighlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 32x32 resolution would look good on mobile"
+            [groupName]="getImageControl('alertOffUnhighlightImage')"
+            fieldLabel="Alert Off Unhighlight Image Url"
+          >
+          </thinkx-image-drag-drop>
+        </div>
+
+        <div class="w-100">
+          <h2 class="text-align-left">
+            Product Image
+          </h2>
+          <thinkx-image-drag-drop
+              [groupName]="imageDragDropGroup"
+              fieldLabel="Image Url"
+            >
+            </thinkx-image-drag-drop>
+        </div>
+
+        <!-- <form [formGroup]="productForm" class="d-flex flex-direction-column">
+          <div
+            formArrayName="items"
+            *ngFor="let itemGroup of items.controls; let i = index"
+          >
+            <thinkx-image-drag-drop
+              [groupName]="getGroup(i)"
+              fieldLabel="Image Url"
+            >
+            </thinkx-image-drag-drop>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="addItem()"
+            class="button-with-text"
+          >
+            <mat-icon>add</mat-icon>
+            Add Product Images Here
+          </button>
+        </form> -->
+
+        <div class="w-100">
+          <h2 class="text-align-left">
+            Product Manual
+          </h2>
+
+          <thinkx-image-drag-drop
+            class="margin-left-1"
+            imageSizePlaceholder="Images with 720x1080 resolution would look good on mobile, PDF with size 2MB would be good."
+            [groupName]="getImageControl('productManual')"
+            fieldLabel="Product Manual image/PDF Url"
+            [isPdf]="true"
+          >
+          </thinkx-image-drag-drop>
+
+        </div>
+
+        <div class="w-100">
+          <h2 class="text-align-left" *ngIf="featureCheckboxes.length > 0">
+            Features
+          </h2>
+          <div
+            cdkDropList
+            cdkDropListOrientation="vertical"
+            (cdkDropListDropped)="drop($event)"
+            class="cdkDropList"
+          >
+            <div class="tr box" *ngIf="featureCheckboxes.length > 0">
+              <div
+                class="td"
+                *ngFor="let feature of featureCheckboxes; let i = index"
+                cdkDrag
+              >
+                <mat-icon cdkDragHandle class="pointer-cursor"
+                  >drag_indicator</mat-icon
+                >
+                <mat-checkbox
+                  [checked]="feature.isChecked"
+                  (change)="toggleFeatureCheckbox($event, feature.data._id)"
+                  >{{ feature.data.name }}</mat-checkbox
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+
+      <mat-card-footer
+        style="padding: 10px; text-align: center; display: block"
+      >
+        <button mat-raised-button color="primary" type="submit">
+        <mat-icon>add</mat-icon>
+          Add</button>
+        &nbsp; &nbsp;
+        <button routerLink="/home/product" mat-raised-button type="button">
+          <mat-icon>cancel</mat-icon>
+          Cancel
+        </button>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+  <div
+    *ngIf="isLoading"
+    class="loader"
+  >
+    <mat-progress-spinner color="primary" mode="indeterminate" diameter="80">
+    </mat-progress-spinner>
+  </div>
+</div>

@@ -1,0 +1,470 @@
+<div class="grid-container">
+  <mat-card
+    style="
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+    "
+  >
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+      (click)="addDeviceDialog()"
+      [disabled]="products.length == 0"
+      #tooltip="matTooltip"
+      matTooltip="Add new device"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+    <mat-divider
+      [vertical]="true"
+      style="height: 2rem; margin-inline: 1rem"
+    ></mat-divider>
+
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+      [ngClass]="{
+        refreshAnimation: isLoading && isLoadingType === loadingOption.REFRESH
+      }"
+      (click)="refresh()"
+      matTooltip="Refresh grid"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+
+    <mat-divider
+      [vertical]="true"
+      style="height: 2rem; margin-inline: 1rem"
+    ></mat-divider>
+
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+      (click)="inputFileTypeCsv.click()"
+      [disabled]="products.length <= 0"
+      matTooltip="Import CSV file"
+    >
+      <mat-icon>file_upload</mat-icon>
+    </button>
+
+    <mat-divider
+      [vertical]="true"
+      style="height: 2rem; margin-inline: 1rem"
+    ></mat-divider>
+
+    <button
+      mat-icon-button
+      class="example-icon"
+      aria-label="Example icon-button with menu icon"
+      (click)="downloadFile()"
+      [disabled]="products.length <= 0"
+      matTooltip="Download sample csv file"
+    >
+      <mat-icon>file_download</mat-icon>
+    </button>
+
+    <input
+      hidden
+      type="file"
+      #inputFileTypeCsv
+      value=""
+      (click)="inputFileTypeCsv.value = ''"
+      (change)="uploadExcelFile($event)"
+      accept=".csv, *.csv"
+      runat="server"
+    />
+
+    <span class="example-spacer"></span>
+
+    <div class="input-size">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Ex name, id"
+          #input
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card>
+  <div class="mat-elevation-z2" style="position: relative">
+    <table
+      mat-table
+      class="full-width-table"
+      matSort
+      aria-label="Elements"
+      multiTemplateDataRows
+    >
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef style="width: 50px">Sr no</th>
+
+        <td mat-cell *matCellDef="let row; let i = dataIndex">
+          {{ i + 1 + paginator.pageSize * paginator.pageIndex }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="displayedColumns.length"
+        >
+          <div
+            class="example-element-detail"
+            [@detailExpand]="
+              element == expandedElement ? 'expanded' : 'collapsed'
+            "
+          >
+            <form
+              class="w-100"
+              [formGroup]="deviceForm"
+              (ngSubmit)="onSubmit()"
+            >
+              <div class="example-element-diagram">
+                <div class="d-flex align-items-center custom-div-for-expand">
+                  <input
+                    type="hidden"
+                    [value]="element._id"
+                    formControlName="_id"
+                  />
+                  <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input
+                      [value]="element.name"
+                      matInput
+                      placeholder="Enter Name"
+                      #input
+                      formControlName="name"
+                      required
+                      [ngClass]="{
+                        'is-invalid': submitted && f.name.errors
+                      }"
+                    />
+                    <mat-error *ngIf="f.name.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-label>Device id</mat-label>
+                    <input
+                      readonly
+                      type="text"
+                      matInput
+                      placeholder="Enter device id"
+                      #input
+                      formControlName="deviceId"
+                      min="1"
+                      required
+                      [value]="element.deviceId"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.deviceId.errors
+                      }"
+                    />
+                    <mat-error *ngIf="f.deviceId.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+                  <!-- <mat-form-field>
+                    <mat-label>Warranty End Date</mat-label>
+                    <input
+                      readonly
+                      matInput
+                      formControlName="warrantyEndDate"
+                    />
+                    <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
+                  </mat-form-field> -->
+                  <mat-form-field>
+                    <mat-label>Warranty Days</mat-label>
+                    <input
+                      [value]="element.warrantyDays"
+                      type="number"
+                      matInput
+                      placeholder="Enter Warranty"
+                      #input
+                      formControlName="warrantyDays"
+                      min="1"
+                      required
+                      [ngClass]="{
+                        'is-invalid': submitted && f.warrantyDays.errors
+                      }"
+                    />
+                    <mat-error *ngIf="f.warrantyDays.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-label>Device Password</mat-label>
+                    <input
+                      [type]="showPassword ? 'password' : 'text'"
+                      [value]="element.password"
+                      matInput
+                      placeholder="Enter Password"
+                      #input
+                      formControlName="devicePassword"
+                      required
+                      [ngClass]="{
+                        'is-invalid': submitted && f.devicePassword.errors
+                      }"
+                    />
+                    <mat-error *ngIf="f.devicePassword.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                    <mat-icon matSuffix (click)="showPassword = !showPassword">
+                      {{ showPassword ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                  </mat-form-field>
+                  <mat-slide-toggle
+                    [checked]="element.status"
+                    formControlName="status"
+                    aria-required="true"
+                  >
+                    Status
+                  </mat-slide-toggle>
+                  <mat-slide-toggle
+                    [checked]="element.active"
+                    formControlName="active"
+                    aria-required="true"
+                  >
+                    Active
+                  </mat-slide-toggle>
+
+                  <mat-form-field>
+                    <mat-label>Manufacture Date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker1"
+                      formControlName="manufactureDate"
+                      [value]="element.manufactureDate"
+                      required
+                    />
+                    <mat-datepicker-toggle
+                      style="font-size: 2rem"
+                      matSuffix
+                      [for]="picker1"
+                    >
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="f.manufactureDate.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <mat-label>Sold To</mat-label>
+                    <input
+                      type="text"
+                      [value]="element.soldTo"
+                      matInput
+                      placeholder="Ex name, id"
+                      #input
+                      formControlName="soldTo"
+                      required
+                      [ngClass]="{
+                        'is-invalid': submitted && f.soldTo.errors
+                      }"
+                    />
+                    <mat-error *ngIf="f.soldTo.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <mat-label>Product Type</mat-label>
+                    <mat-select formControlName="productType" required>
+                      <mat-option
+                        *ngFor="let option of options"
+                        [value]="option._id"
+                      >
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="f.productType.hasError">
+                      {{ getErrorMessage() }}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-label>Enrollment Date</mat-label>
+                    <input
+                      [value]="element.enrollmentDate"
+                      readonly
+                      matInput
+                      [matDatepicker]="picker3"
+                      formControlName="enrollmentDate"
+                    />
+                    <mat-datepicker-toggle matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                  </mat-form-field>
+
+                  <button mat-raised-button color="primary" type="submit">
+                    <mat-icon>save</mat-icon>
+                    Save
+                  </button>
+                </div>
+
+                <div class="wrapper">
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteConfirmationDialog()"
+                  >
+                    <mat-icon> delete </mat-icon>
+                  </button>
+                  <mat-divider
+                    [vertical]="true"
+                    style="height: 2rem; margin-inline: 1rem"
+                  ></mat-divider>
+                  <button
+                    type="button"
+                    mat-icon-button
+                    (click)="closeButtonExpanded()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deviceId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Device Id</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.deviceId }}
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Device Name</th>
+        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="warrantyEndDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Warranty End Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.enrollmentDate != null && row.enrollmentDate.length > 0 ? convertDaysToDate(row.enrollmentDate, row.warrantyDays) : '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="devicePassword">
+        <th mat-header-cell *matHeaderCellDef>Device Password</th>
+        <td mat-cell *matCellDef="let row">****</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Device Status</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.status ? 'ENABLED' : 'DISABLED' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Device Active</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.active ? 'ENABLED' : 'DISABLED' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="manufactureDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Manufacture Date
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.manufactureDate != undefined ? dateFormat(row.manufactureDate) : '-' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="soldTo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sold to</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.soldTo }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="productType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Type</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.productType | getProductName: products }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="enrollmentDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Enrollment Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.enrollmentDate ? dateFormat(row.enrollmentDate) : '-' }}</td>
+      </ng-container>
+
+      <!-- Expand Arrow Column -->
+      <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button style="float: right">
+            <mat-icon *ngIf="expandedElement !== row">
+              keyboard_arrow_up
+            </mat-icon>
+            <mat-icon *ngIf="expandedElement === row">
+              keyboard_arrow_down
+            </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: displayedColumns"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="
+          showPassword = true;
+          rowSelected(element);
+          expandedElement = expandedElement === element ? null : element
+        "
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']"
+        class="example-detail-row"
+      ></tr>
+    </table>
+
+    <!-- no data found div -->
+    <table>
+      <tr *ngIf="!dataSource.data.length">
+        <td
+          style="text-align: center; padding: 1rem"
+          mat-card-title
+          [attr.colspan]="displayedColumns.length"
+        >
+          No Records Found!
+        </td>
+      </tr>
+    </table>
+
+    <!-- loader -->
+    <div
+      *ngIf="isLoading"
+      class="loader"
+      [ngClass]="{
+        new: isLoadingType === loadingOption.NEW,
+        refresh: isLoadingType === loadingOption.REFRESH
+      }"
+    >
+      <mat-progress-spinner color="primary" mode="indeterminate" diameter="80">
+      </mat-progress-spinner>
+    </div>
+
+    <mat-paginator
+      #paginator
+      [hidden]="!dataSource.data.length"
+      [length]="dataSource?.data?.length"
+      [pageIndex]="0"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20]"
+    >
+    </mat-paginator>
+  </div>
+</div>
